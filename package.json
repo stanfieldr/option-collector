@@ -1,6 +1,6 @@
 {
   "name": "option-collector",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": false,
   "main": "dist/option-collector.common.js",
   "scripts": {
@@ -27,5 +27,10 @@
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "vue-template-compiler": "^2.6.11"
-  }
+  },
+  "keywords": [
+    "vue",
+    "dropdown",
+    "options"
+  ]
 }
