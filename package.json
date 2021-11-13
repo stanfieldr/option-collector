@@ -1,8 +1,8 @@
 {
   "name": "option-collector",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "private": false,
-  "main": "dist/option-collector.common.js",
+  "main": "dist/option-collector.umd.min.js",
   "scripts": {
     "serve": "vue serve src/Test.vue",
     "build": "vue-cli-service build --target lib --name option-collector src/main.js",

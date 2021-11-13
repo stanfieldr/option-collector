@@ -560,7 +560,6 @@ export default {
   .select-one {
     width: 100%;
     justify-content: space-between;
-    padding: 0 0.45em;
   }
 
   .selected-chips {
