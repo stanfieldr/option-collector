@@ -139,11 +139,6 @@ export default {
       required: false,
       default: "single", // single, multiple, multiple-chips
     },
-    countSelected: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
     options: {
       type: Array, // of objects
       required: true,
