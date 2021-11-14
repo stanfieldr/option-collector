@@ -721,6 +721,10 @@ export default {
       overscroll-behavior: none;
       margin: 0.5em 0;
 
+      &:not(.multiple) label {
+        padding-left: 0.8em;
+      }
+
       h5 {
         white-space: nowrap;
         font-weight: bold;
@@ -741,6 +745,7 @@ export default {
         li {
           & > label {
             display: flex;
+            justify-content: left;
             align-items: center;
             padding: 0.35em;
             padding-right: 0;
