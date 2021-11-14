@@ -576,6 +576,8 @@ export default {
   .option-collector-face {
     padding: 0.25em;
     white-space: nowrap;
+    min-width: 3em;
+    width: 100%;
 
     .select-one,
     .total {
