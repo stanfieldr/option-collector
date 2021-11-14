@@ -1,5 +1,7 @@
 # Option Collector
 
+A vue dropdown component that handles objects in a convenient way.
+
 ## Install
 
 ```
