@@ -321,7 +321,7 @@ export default {
       // Re-cache computed prop if this value changes
       this.open;
 
-      if (!this.$el) {
+      if (!this.$el || !this.$refs.dropdownMenu) {
         return "below";
       }
 
