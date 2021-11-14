@@ -7,8 +7,8 @@
             selected === null ? "Select One" : displaySelectedValue(selected)
           }}</span>
         </div>
-        <div v-else-if="face === 'multiple'">
-          <span class="total">{{ selectedOptionsArray.length }} Selected</span>
+        <div v-else-if="face === 'multiple'" class="total">
+          {{ selectedOptionsArray.length }} Selected
         </div>
         <template v-else-if="face === 'multiple-chips'">
           <div class="selected-chips">
@@ -20,11 +20,14 @@
               @click.stop
             >
               <span>{{ displaySelectedValue(selectedValue) }}</span>
-              <font-awesome-icon
-                icon="times"
-                @click="removeChip(selectedValue)"
-              />
+              <button
+                class="remove-chip"
+                @click.prevent="removeChip(selectedValue)"
+              >
+                <font-awesome-icon icon="times" />
+              </button>
             </div>
+            {{ selectedOptionsArray.length === 0 ? "&nbsp;" : "" }}
           </div>
         </template>
       </slot>
@@ -44,19 +47,34 @@
         <input
           v-model="searchText"
           type="text"
-          class="form-control"
+          class="option-collector-search"
           placeholder="Search..."
           autocomplete="off"
           @input="searchTextChanged"
         />
-        <button
-          v-if="multiple"
-          type="button"
-          class="btn btn-default btn-sm"
-          @click="toggleOptions"
+
+        <div
+          v-if="multiple && options.length > 0"
+          class="option-collector-select-all-none"
         >
-          <b>Select/Deselect All</b>
-        </button>
+          <label>Selected {{ selectedOutOfTotal }}</label>
+          <div class="option-collector-btn-group">
+            <button
+              @click.prevent="selectAll"
+              :class="{
+                is_state: selectedOptionsArray.length === options.length,
+              }"
+            >
+              All
+            </button>
+            <button
+              @click.prevent="selectNone"
+              :class="{ is_state: selectedOptionsArray.length === 0 }"
+            >
+              None
+            </button>
+          </div>
+        </div>
       </div>
       <div
         v-if="optionHeader"
@@ -64,9 +82,9 @@
         :class="{ multiple }"
       >
         <div v-for="header in headers" :key="header[1]" class="option-group">
-          <h6 :class="classFromHeaderPartitionGroup(header[0])">
+          <h5 :class="classFromHeaderPartitionGroup(header[0])">
             {{ header[1] }}
-          </h6>
+          </h5>
           <ol>
             <li
               v-for="option in optionsForHeader(header[0])"
@@ -226,6 +244,12 @@ export default {
     },
     multiple() {
       return this.face.startsWith("multiple");
+    },
+    selectedOutOfTotal() {
+      let selected = this.selectedOptionsArray.length.toLocaleString();
+      let total = this.options.length.toLocaleString();
+
+      return `${selected} / ${total}`;
     },
     selectedOptionsArray() {
       let selected = this.selected;
@@ -399,10 +423,20 @@ export default {
       this.$nextTick(() => {
         if (this.open) {
           this.$el
-            .querySelector(".form-control")
+            .querySelector(".option-collector-search")
             .focus({ preventScroll: true });
         }
       });
+    },
+    selectAll() {
+      let selected = this.selectObject
+        ? this.options
+        : this.options.map((o) => o[this.optionKey]);
+
+      this.$emit("update:selected", selected);
+    },
+    selectNone() {
+      this.$emit("update:selected", []);
     },
     toggleOptions() {
       let selected = this.selectedKeys;
@@ -534,11 +568,19 @@ export default {
   border: 1px solid #e8e8e8;
   border-radius: 5px;
   cursor: pointer;
-  min-height: 36px;
+
+  &.disabled {
+    opacity: 0.5;
+  }
 
   .option-collector-face {
-    padding: 0 0.5em;
+    padding: 0.25em;
     white-space: nowrap;
+
+    .select-one,
+    .total {
+      margin: 0.25em;
+    }
   }
 
   .line {
@@ -549,23 +591,14 @@ export default {
 
   .fa-caret-down {
     cursor: pointer;
-    padding: 0 0.9em;
+    margin: 0 0.9em;
     z-index: 2;
-  }
-
-  &.disabled .fa-caret-down {
-    color: #f3f3f3;
-  }
-
-  .select-one {
-    width: 100%;
-    justify-content: space-between;
   }
 
   .selected-chips {
     display: flex;
     flex-wrap: wrap;
-
+    margin: 0.07em; // makes same height as select one
     max-height: calc(
       2em * 4.5
     ); // 4 lines max, show half a line to indicate need to scroll
@@ -578,16 +611,19 @@ export default {
       align-items: center;
       cursor: default;
       background-color: #ddd;
-      margin: 0.25em;
+      margin: 0 0.25em;
       padding: 0.25em 0.5em;
       border-radius: 5px;
       font-size: 0.8em;
 
-      .fa-times {
+      .remove-chip {
         cursor: pointer;
-        padding: 0.25em;
+        padding: 0.2em 0.5em;
         font-size: 0.85em;
-        margin-left: 0.35em;
+        margin-left: 0.5em;
+        margin-right: -0.25em;
+        border: none;
+        background: inherit;
 
         &:hover {
           background-color: #999;
@@ -595,20 +631,6 @@ export default {
         }
       }
     }
-  }
-
-  &.disabled .selected-chips .selected-chip {
-    background-color: #f3f3f3;
-    color: #a9a9a9;
-    .fa-times {
-      &:hover {
-        background-color: transparent;
-      }
-    }
-  }
-
-  button {
-    width: 100%;
   }
 
   .option-collector-menu {
@@ -630,12 +652,65 @@ export default {
       z-index: 1000;
     }
 
-    .option-collector-menu-top {
-      padding: 0 0.5em 0.5em 0.5em;
-      margin: 0.4em 0;
+    .option-collector-select-all-none {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8em;
 
-      .form-control {
-        margin-bottom: 0.5em;
+      label {
+        margin: 0;
+        font-weight: bold;
+        white-space: nowrap;
+      }
+
+      .option-collector-btn-group {
+        display: flex;
+        margin-left: 1em;
+
+        button {
+          cursor: pointer;
+          background: white;
+          border-radius: 5px;
+          border: 1px solid #ddd;
+          padding: 0 0.8em;
+
+          &.is_state {
+            background: #007bff;
+            border-color: #007bff;
+            color: white;
+          }
+
+          &:first-child {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            border-right-width: 0;
+          }
+
+          &:last-child {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+          }
+        }
+      }
+    }
+
+    .option-collector-menu-top {
+      display: flex;
+      flex-direction: inherit;
+      padding: 0 0.5em;
+      margin: 0.4em 0;
+      gap: 0.5em;
+
+      .option-collector-search {
+        line-height: 24px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        padding: 0.25em 0.5em;
+
+        &:focus-visible {
+          border: none;
+        }
       }
     }
 
@@ -644,20 +719,14 @@ export default {
       overflow: auto;
       overflow-x: -moz-hidden-unscrollable;
       overscroll-behavior: none;
-      padding: 0 0.5em;
+      margin: 0.5em 0;
 
-      &:not(.multiple) li > label {
-        padding: 0.5em;
-        &:hover {
-          background-color: #eee;
-        }
-      }
-
-      h6 {
+      h5 {
         white-space: nowrap;
         font-weight: bold;
         border-bottom: 1px solid #eee;
-        padding: 0.35em 0;
+        padding: 0.35em 0.8em;
+        margin: 0.5em 0;
 
         &:first-child {
           margin-top: 0;
@@ -677,6 +746,12 @@ export default {
             padding-right: 0;
             font-weight: normal;
             cursor: pointer;
+            user-select: none;
+            margin: 0;
+
+            &:hover {
+              background-color: #eee;
+            }
           }
 
           white-space: nowrap;
