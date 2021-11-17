@@ -570,6 +570,7 @@ export default {
   border: 1px solid #e8e8e8;
   border-radius: 5px;
   cursor: pointer;
+  min-width: 7em;
 
   &.disabled {
     opacity: 0.5;
@@ -578,7 +579,6 @@ export default {
   .option-collector-face {
     padding: 0.25em;
     white-space: nowrap;
-    min-width: 3em;
     width: 100%;
 
     .select-one,
@@ -721,7 +721,6 @@ export default {
       overflow: auto;
       overflow-x: -moz-hidden-unscrollable;
       overscroll-behavior: none;
-      margin: 0.5em 0;
 
       &:not(.multiple) label {
         padding-left: 0.8em;
@@ -740,7 +739,7 @@ export default {
       }
 
       ol {
-        margin: 0;
+        margin: 0.5em 0;
         padding: 0;
         list-style-type: none;
 
