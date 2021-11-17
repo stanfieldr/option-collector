@@ -1,6 +1,6 @@
 {
   "name": "option-collector",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "private": false,
   "main": "dist/option-collector.umd.min.js",
   "scripts": {
