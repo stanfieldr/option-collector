@@ -34,7 +34,9 @@
     </div>
 
     <div class="line" />
-    <font-awesome-icon icon="caret-down" />
+    <div class="arrow-down">
+      <font-awesome-icon icon="caret-down" />
+    </div>
 
     <div
       ref="dropdownMenu"
@@ -591,10 +593,8 @@ export default {
     border-radius: 0 3px 3px 0;
   }
 
-  .fa-caret-down {
-    cursor: pointer;
-    margin: 0 0.9em;
-    z-index: 2;
+  .arrow-down {
+    padding: 0 0.7em;
   }
 
   .selected-chips {
