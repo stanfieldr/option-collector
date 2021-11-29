@@ -1,36 +1,37 @@
 <template>
   <div class="option-collector" :class="{ disabled }" @click="toggle()">
-    <div class="option-collector-face">
-      <slot name="face">
-        <div v-if="face === 'single'" class="select-one">
-          <span class="text">{{
+    <div class="option-collector-face" slot="face">
+      <div v-if="face === 'single'" class="select-one">
+        <span class="text">
+          {{
             selected === null ? "Select One" : displaySelectedValue(selected)
-          }}</span>
-        </div>
-        <div v-else-if="face === 'multiple'" class="total">
-          {{ selectedOptionsArray.length }} Selected
-        </div>
-        <template v-else-if="face === 'multiple-chips'">
-          <div class="selected-chips">
-            <div
-              v-for="selectedValue in sortedSelectedOptions"
-              :key="selectedValue"
-              class="selected-chip"
-              :class="classFromSelectedValue(selectedValue)"
-              @click.stop
+          }}
+          &nbsp;
+        </span>
+      </div>
+      <div v-else-if="face === 'multiple'" class="total">
+        {{ selectedOptionsArray.length }} Selected
+      </div>
+      <template v-else-if="face === 'multiple-chips'">
+        <div class="selected-chips">
+          <div
+            v-for="selectedValue in sortedSelectedOptions"
+            :key="selectedValue"
+            class="selected-chip"
+            :class="classFromSelectedValue(selectedValue)"
+            @click.stop
+          >
+            <span>{{ displaySelectedValue(selectedValue) }}&nbsp;</span>
+            <button
+              class="remove-chip"
+              @click.prevent="removeChip(selectedValue)"
             >
-              <span>{{ displaySelectedValue(selectedValue) }}</span>
-              <button
-                class="remove-chip"
-                @click.prevent="removeChip(selectedValue)"
-              >
-                <font-awesome-icon icon="times" />
-              </button>
-            </div>
-            {{ selectedOptionsArray.length === 0 ? "&nbsp;" : "" }}
+              <font-awesome-icon icon="times" />
+            </button>
           </div>
-        </template>
-      </slot>
+          {{ selectedOptionsArray.length === 0 ? "&nbsp;" : "" }}
+        </div>
+      </template>
     </div>
 
     <div class="line" />
@@ -514,7 +515,7 @@ export default {
       let option = this.getOptionFromSelectedValue(selectedValue);
 
       if (!option) {
-        return "";
+        return " ";
       }
 
       return option[this.optionValue];
