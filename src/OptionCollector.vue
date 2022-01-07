@@ -614,7 +614,7 @@ export default {
       align-items: center;
       cursor: default;
       background-color: #ddd;
-      margin: 0 0.25em;
+      margin: 0.25em;
       padding: 0.25em 0.5em;
       border-radius: 5px;
       font-size: 0.8em;
