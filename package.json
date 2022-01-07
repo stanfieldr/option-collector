@@ -1,8 +1,13 @@
 {
   "name": "option-collector",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "private": false,
   "main": "dist/option-collector.umd.min.js",
+  "bugs": "https://github.com/stanfieldr/option-collector/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stanfieldr/option-collector.git"
+  },
   "scripts": {
     "serve": "vue serve src/Test.vue",
     "build": "vue-cli-service build --target lib --name option-collector src/main.js",
